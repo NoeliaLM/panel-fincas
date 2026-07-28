@@ -1,0 +1,238 @@
+<title>Panel de control · Fincas 2026</title>
+<style>
+  :root{
+    --paper:#f7f8f4;--card:#fff;--ink:#1b2016;--muted:#5f6a55;--faint:#8a9480;--line:#e4e8dc;
+    --accent:#548235;--accent-deep:#3b5e24;--accent-soft:#eaf0e1;--good:#2e7d32;--good-soft:#e7f2e5;
+    --bad:#b23a2e;--bad-soft:#f6e6e3;--warn:#8a6400;--warn-soft:#f3ead2;--gasto:#a8894a;--track:#eceee6;--shadow:0 1px 2px rgba(30,40,20,.06);
+    --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --paper:#14170f;--card:#1c2016;--ink:#eef1e6;--muted:#a9b39a;--faint:#7d876e;--line:#2a2f21;
+    --accent:#7fb45a;--accent-deep:#9ccb78;--accent-soft:#232a19;--good:#6fbf73;--good-soft:#1f2a1c;
+    --bad:#e0776b;--bad-soft:#2c1e1b;--warn:#d9a636;--warn-soft:#33301c;--gasto:#c2a066;--track:#262b1d;--shadow:0 1px 2px rgba(0,0,0,.3);}}
+  :root[data-theme="light"]{--paper:#f7f8f4;--card:#fff;--ink:#1b2016;--muted:#5f6a55;--faint:#8a9480;--line:#e4e8dc;--accent:#548235;--accent-deep:#3b5e24;--accent-soft:#eaf0e1;--good:#2e7d32;--good-soft:#e7f2e5;--bad:#b23a2e;--bad-soft:#f6e6e3;--warn:#8a6400;--warn-soft:#f3ead2;--gasto:#a8894a;--track:#eceee6;--shadow:0 1px 2px rgba(30,40,20,.06);}
+  :root[data-theme="dark"]{--paper:#14170f;--card:#1c2016;--ink:#eef1e6;--muted:#a9b39a;--faint:#7d876e;--line:#2a2f21;--accent:#7fb45a;--accent-deep:#9ccb78;--accent-soft:#232a19;--good:#6fbf73;--good-soft:#1f2a1c;--bad:#e0776b;--bad-soft:#2c1e1b;--warn:#d9a636;--warn-soft:#33301c;--gasto:#c2a066;--track:#262b1d;--shadow:0 1px 2px rgba(0,0,0,.3);}
+  *{box-sizing:border-box}
+  .wrap{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100%;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .num{font-variant-numeric:tabular-nums}
+  header.top{background:var(--accent);color:#fff;padding:18px 22px 14px}
+  header.top h1{margin:0;font-size:20px;font-weight:600;letter-spacing:.2px}
+  header.top .sub{margin:4px 0 0;font-size:12.5px;color:#e3eed7}
+  header.top .gen{float:right;font-size:11.5px;color:#d7e6c7;font-variant-numeric:tabular-nums}
+  .tabs{display:flex;flex-wrap:wrap;gap:2px;padding:0 16px;background:var(--accent);border-bottom:3px solid var(--accent-deep)}
+  .tab{appearance:none;border:0;background:transparent;color:#dcebcd;font-family:inherit;font-size:13px;font-weight:500;padding:9px 14px 11px;cursor:pointer;border-radius:8px 8px 0 0;margin-bottom:-3px}
+  .tab[aria-selected="true"]{background:var(--paper);color:var(--accent-deep)}
+  main{max-width:1080px;margin:0 auto;padding:20px 22px 44px}
+  .note{font-size:12px;color:var(--muted);background:var(--accent-soft);border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin:0 0 18px}
+  .note b{color:var(--accent-deep);font-weight:600}
+  h2.sec{font-size:15px;font-weight:600;margin:0 0 12px;color:var(--ink)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 22px}
+  .tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow)}
+  .tile .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .tile .v{font-size:21px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+  .tile .s{font-size:11.5px;color:var(--faint);margin-top:2px;font-variant-numeric:tabular-nums}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 17px 15px;box-shadow:var(--shadow)}
+  .card h3{margin:0;font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .pill.good{background:var(--good-soft);color:var(--good)}
+  .pill.bad{background:var(--bad-soft);color:var(--bad)}
+  .pill.warn2{background:var(--warn-soft);color:var(--warn)}
+  .metric{margin-top:13px}
+  .metric .ml{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--muted)}
+  .metric .ml .ej{font-size:11px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .metric .mv{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin:1px 0 5px}
+  .metric .mv .pto{font-size:12px;font-weight:400;color:var(--faint)}
+  .bar{height:7px;background:var(--track);border-radius:6px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--accent);border-radius:6px}
+  .bar.g i{background:var(--gasto)}
+  .res{margin-top:14px;padding-top:11px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:baseline}
+  .res .rl{font-size:12.5px;color:var(--muted)}
+  .res .rv{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+  .rv.good{color:var(--good)} .rv.bad{color:var(--bad)}
+  .sel{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+  .sel button{appearance:none;font-family:inherit;font-size:13px;font-weight:500;padding:6px 14px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+  .sel button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .twrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+  th,td{padding:9px 12px;text-align:right;white-space:nowrap}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600;border-bottom:1.5px solid var(--line);background:var(--accent-soft)}
+  td{border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  td.lbl,th.lbl{text-align:left;font-variant-numeric:normal}
+  td.lbl{font-weight:500}
+  tr:last-child td{border-bottom:0}
+  tbody tr.tot td,tbody tr.sub td{font-weight:700;background:var(--accent-soft)}
+  tbody tr.sub td{border-top:1.5px solid var(--accent)}
+  .minibar{display:inline-block;vertical-align:middle;width:50px;height:6px;background:var(--track);border-radius:4px;overflow:hidden;margin-left:8px}
+  .minibar i{display:block;height:100%;background:var(--accent)}
+  .pos{color:var(--good)} .neg{color:var(--bad)}
+  /* comparativa bars */
+  .cmp{display:flex;flex-direction:column;gap:9px}
+  .cmprow{display:grid;grid-template-columns:96px 1fr 120px;align-items:center;gap:10px;font-size:13px}
+  .cmprow .cn{font-weight:500}
+  .cmpbar{position:relative;height:22px;background:var(--track);border-radius:5px}
+  .cmpbar .z{position:absolute;top:0;bottom:0;width:1px;background:var(--faint);left:50%}
+  .cmpbar i{position:absolute;top:0;bottom:0;border-radius:4px}
+  .cmpval{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+  /* evolucion */
+  .chart{display:flex;align-items:flex-end;gap:14px;height:180px;padding:10px 4px 0;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .mcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+  .mbars{display:flex;gap:3px;align-items:flex-end;height:100%}
+  .mbars span{width:13px;border-radius:3px 3px 0 0}
+  .mbars .bi{background:var(--accent)} .mbars .bg{background:var(--gasto)}
+  .mlab{font-size:11px;color:var(--muted)}
+  .leg{display:flex;gap:16px;font-size:12px;color:var(--muted);margin:0 0 16px}
+  .leg span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  footer{max-width:1080px;margin:0 auto;padding:0 22px 30px;font-size:11.5px;color:var(--faint)}
+  @media (max-width:520px){header.top .gen{display:none}main{padding:16px}.cmprow{grid-template-columns:80px 1fr 96px}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="gen" id="gen"></span>
+    <h1>Panel de control · Fincas 2026</h1>
+    <p class="sub">Real acumulado vs presupuesto — grupo Alhándiga</p>
+  </header>
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="resumen">Resumen</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="comparativa">Comparativa</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pyl">P&amp;L por finca</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="evolucion">Evolución mensual</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cuadres">Cuadres</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="actividad">Por actividad</button>
+  </div>
+
+  <main>
+    <div class="note">
+      <b>Real</b> = acumulado Ene–Jun 2026 · <b>Presupuesto</b> = año completo. Los % son <b>ejecución sobre el presupuesto anual</b> (~50% sería el ritmo a mitad de año).
+    </div>
+
+    <section id="resumen">
+      <div class="tiles" id="tiles"></div>
+      <div class="grid" id="cards"></div>
+    </section>
+
+    <section id="comparativa" hidden>
+      <h2 class="sec">Resultado contable Ene–Jun por finca (PYG)</h2>
+      <div class="cmp" id="cmpRes"></div>
+      <h2 class="sec" style="margin-top:26px">Ingresos y gastos reales por finca</h2>
+      <div class="twrap"><table id="cmpTab"></table></div>
+    </section>
+
+    <section id="pyl" hidden>
+      <div class="sel finca-sel" data-target="pyl"></div>
+      <div class="twrap"><table id="plTab"></table></div>
+      <p class="note" style="margin-top:14px">Cuenta de explotación oficial (PYG), acumulada Ene–Jun. Las líneas <b>A) / C) / E)</b> son subtotales.</p>
+    </section>
+
+    <section id="evolucion" hidden>
+      <div class="sel finca-sel" data-target="ev"></div>
+      <div class="leg"><span><i class="dot" style="background:var(--accent)"></i>Ingresos reales</span><span><i class="dot" style="background:var(--gasto)"></i>Gastos reales</span></div>
+      <div class="chart" id="evChart"></div>
+      <div class="twrap"><table id="evTab"></table></div>
+    </section>
+
+    <section id="cuadres" hidden>
+      <h2 class="sec">Resultado: libro vs PYG (excluida la variación de existencias)</h2>
+      <div class="twrap"><table id="cuTab"></table></div>
+      <p class="note" style="margin-top:14px">Se <b>excluye la variación de existencias</b> del PYG (aún no registrada en el libro hasta julio), para que libro y PYG cuadren. Las diferencias que quedan (Cañada, Grancampo) son partidas de <b>reparto</b> pendientes de distribuir.</p>
+    </section>
+
+    <section id="actividad" hidden>
+      <div class="sel finca-sel" data-target="act"></div>
+      <div class="twrap"><table id="actTab"></table></div>
+    </section>
+  </main>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const DATA = {"generado":"2026-07-28","fincas":[{"nombre":"Cañada","total":{"ptoG":2126334,"ptoI":3053058,"realG":1067597,"realI":1121403,"realM":53806},"cats":[{"cod":"12","nom":"VACUNO","ptoG":381397,"realG":167880,"ptoI":968200,"realI":361698},{"cod":"11911","nom":"P. TERNEROS CEBO","ptoG":217960,"realG":128438,"ptoI":0,"realI":0},{"cod":"13","nom":"PORCINO","ptoG":1289569,"realG":626013,"ptoI":1835960,"realI":670392},{"cod":"14","nom":"OTROS ANIMALES","ptoG":1980,"realG":943,"ptoI":0,"realI":0},{"cod":"15","nom":"SIEMBRA","ptoG":74167,"realG":1232,"ptoI":0,"realI":0},{"cod":"16","nom":"REPARACIONES Y CONSERVA","ptoG":37834,"realG":32555,"ptoI":0,"realI":0},{"cod":"17","nom":"PERSONAL","ptoG":170080,"realG":71466,"ptoI":5141,"realI":2627},{"cod":"18","nom":"GASTOS GENERALES","ptoG":171308,"realG":121707,"ptoI":0,"realI":6},{"cod":"19","nom":"OTROS INGRESOS","ptoG":0,"realG":17683,"ptoI":243757,"realI":85045}],"meses":[{"mes":"ENE","ptoG":195013,"ptoI":372813,"realG":138531,"realI":160891},{"mes":"FEB","ptoG":169704,"ptoI":215573,"realG":216621,"realI":271553},{"mes":"MAR","ptoG":134772,"ptoI":343489,"realG":129420,"realI":272260},{"mes":"ABR","ptoG":211016,"ptoI":87773,"realG":203168,"realI":212090},{"mes":"MAY","ptoG":204078,"ptoI":364557,"realG":179524,"realI":133379},{"mes":"JUN","ptoG":212894,"ptoI":111997,"realG":200332,"realI":71231}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":1088053},{"label":"4. Aprovisionamientos","val":-593562},{"label":"5. Otros ingresos de explotación","val":31399},{"label":"6. Gastos de personal","val":-68089},{"label":"7. Otros gastos de explotación","val":-135478},{"label":"8. Amortización del inmovilizado","val":-45259},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":-15135},{"label":"A) Resultado explotación (del 1 al 13)","val":261639},{"label":"14. Ingresos financieros","val":6},{"label":"15. Gastos financieros","val":-22138},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-22131},{"label":"C) Resultado antes de impuestos (A+B)","val":239507},{"label":"E) Resultado del ejercicio (C+20)","val":239507}],"pygResultado":239507,"pygVarExist":201929},{"nombre":"Castrillo","total":{"ptoG":1556707,"ptoI":2648900,"realG":933702,"realI":1212708,"realM":279005},"cats":[{"cod":"12","nom":"VACUNO","ptoG":175531,"realG":38400,"ptoI":283500,"realI":7800},{"cod":"13","nom":"PORCINO","ptoG":870875,"realG":489951,"ptoI":2156200,"realI":1103767},{"cod":"14","nom":"OTROS ANIMALES","ptoG":432,"realG":0,"ptoI":0,"realI":0},{"cod":"16","nom":"REPARACIONES Y MANTENIMIENTO","ptoG":41158,"realG":33435,"ptoI":0,"realI":0},{"cod":"17","nom":"PERSONAL","ptoG":247428,"realG":102568,"ptoI":34200,"realI":7139},{"cod":"18","nom":"GASTOS GENERALES","ptoG":221283,"realG":138797,"ptoI":0,"realI":15376},{"cod":"19","nom":"OTROS INGRESOS","ptoG":0,"realG":21738,"ptoI":175000,"realI":33013}],"meses":[{"mes":"ENE","ptoG":149273,"ptoI":150450,"realG":184674,"realI":130769},{"mes":"FEB","ptoG":125874,"ptoI":78450,"realG":124830,"realI":114368},{"mes":"MAR","ptoG":129675,"ptoI":358009,"realG":180951,"realI":316339},{"mes":"ABR","ptoG":125327,"ptoI":453923,"realG":142039,"realI":276813},{"mes":"MAY","ptoG":82307,"ptoI":86983,"realG":132174,"realI":106831},{"mes":"JUN","ptoG":119399,"ptoI":160743,"realG":169033,"realI":267588}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":1136017},{"label":"4. Aprovisionamientos","val":-426122},{"label":"5. Otros ingresos de explotación","val":20880},{"label":"6. Gastos de personal","val":-92691},{"label":"7. Otros gastos de explotación","val":-189655},{"label":"8. Amortización del inmovilizado","val":-116788},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":20118},{"label":"A) Resultado explotación (del 1 al 13)","val":373557},{"label":"14. Ingresos financieros","val":31},{"label":"15. Gastos financieros","val":-5890},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-5860},{"label":"C) Resultado antes de impuestos (A+B)","val":367697},{"label":"E) Resultado del ejercicio (C+20)","val":367697}],"pygResultado":367697,"pygVarExist":88692},{"nombre":"Checa","total":{"ptoG":326624,"ptoI":508686,"realG":295441,"realI":216056,"realM":-79385},"cats":[{"cod":"12","nom":"VACUNO","ptoG":93522,"realG":26287,"ptoI":274050,"realI":113050},{"cod":"13","nom":"PORCINO","ptoG":0,"realG":100,"ptoI":0,"realI":0},{"cod":"15","nom":"SIEMBRA CHECA","ptoG":122654,"realG":60424,"ptoI":15000,"realI":0},{"cod":"16","nom":"REPARACIONES Y CONSERVA","ptoG":9275,"realG":5233,"ptoI":0,"realI":0},{"cod":"17","nom":"PERSONAL","ptoG":44520,"realG":22640,"ptoI":0,"realI":0},{"cod":"18","nom":"GASTOS GENERALES","ptoG":56654,"realG":41428,"ptoI":0,"realI":31},{"cod":"19","nom":"OTROS INGRESOS","ptoG":0,"realG":57618,"ptoI":219636,"realI":102975}],"meses":[{"mes":"ENE","ptoG":35063,"ptoI":1970,"realG":80634,"realI":0},{"mes":"FEB","ptoG":28344,"ptoI":0,"realG":43304,"realI":0},{"mes":"MAR","ptoG":19512,"ptoI":32909,"realG":47343,"realI":31000},{"mes":"ABR","ptoG":19768,"ptoI":139246,"realG":27927,"realI":1704},{"mes":"MAY","ptoG":20728,"ptoI":7327,"realG":44873,"realI":171},{"mes":"JUN","ptoG":29588,"ptoI":39920,"realG":51361,"realI":183181}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":198735},{"label":"4. Aprovisionamientos","val":-26907},{"label":"5. Otros ingresos de explotación","val":17290},{"label":"6. Gastos de personal","val":-22640},{"label":"7. Otros gastos de explotación","val":-44755},{"label":"8. Amortización del inmovilizado","val":-122315},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":-17015},{"label":"A) Resultado explotación (del 1 al 13)","val":-17606},{"label":"14. Ingresos financieros","val":31},{"label":"15. Gastos financieros","val":-4591},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-4560},{"label":"C) Resultado antes de impuestos (A+B)","val":-22166},{"label":"E) Resultado del ejercicio (C+20)","val":-22166}],"pygResultado":-22166,"pygVarExist":57219},{"nombre":"Corcho","total":{"ptoG":6672395,"ptoI":7894138,"realG":3292478,"realI":2829742,"realM":-462736},"cats":[{"cod":"12","nom":"VACUNO","ptoG":2322059,"realG":909560,"ptoI":3587000,"realI":559514},{"cod":"11911","nom":"P. TERNEROS CEBO","ptoG":1066255,"realG":637508,"ptoI":0,"realI":0},{"cod":"13","nom":"PORCINO","ptoG":2733847,"realG":1420875,"ptoI":3729390,"realI":2057110},{"cod":"14","nom":"OTROS ANIMALES","ptoG":36566,"realG":3594,"ptoI":0,"realI":0},{"cod":"15","nom":"SIEMBRA","ptoG":292336,"realG":8947,"ptoI":28153,"realI":0},{"cod":"16","nom":"REPARACIONES Y CONSERVA","ptoG":117181,"realG":68658,"ptoI":62484,"realI":31242},{"cod":"17","nom":"PERSONAL","ptoG":417201,"realG":224894,"ptoI":112948,"realI":68052},{"cod":"18","nom":"GASTOS GENERALES","ptoG":722206,"realG":407927,"ptoI":24902,"realI":19035},{"cod":"19","nom":"OTROS INGRESOS","ptoG":0,"realG":111867,"ptoI":349261,"realI":90630}],"meses":[{"mes":"ENE","ptoG":475151,"ptoI":921464,"realG":413430,"realI":297710},{"mes":"FEB","ptoG":590217,"ptoI":689512,"realG":498375,"realI":457622},{"mes":"MAR","ptoG":497478,"ptoI":516019,"realG":789714,"realI":533406},{"mes":"ABR","ptoG":586444,"ptoI":555448,"realG":508461,"realI":601928},{"mes":"MAY","ptoG":366892,"ptoI":683801,"realG":328819,"realI":621383},{"mes":"JUN","ptoG":655316,"ptoI":960166,"realG":753679,"realI":317693}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":2703680},{"label":"4. Aprovisionamientos","val":-1405197},{"label":"5. Otros ingresos de explotación","val":121160},{"label":"6. Gastos de personal","val":-211075},{"label":"7. Otros gastos de explotación","val":-370143},{"label":"8. Amortización del inmovilizado","val":-252001},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":6036},{"label":"A) Resultado explotación (del 1 al 13)","val":595584},{"label":"14. Ingresos financieros","val":31},{"label":"15. Gastos financieros","val":-124831},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-124801},{"label":"C) Resultado antes de impuestos (A+B)","val":470784},{"label":"E) Resultado del ejercicio (C+20)","val":470784}],"pygResultado":470784,"pygVarExist":933518},{"nombre":"Grancampo","total":{"ptoG":7011829,"ptoI":6586511,"realG":3695604,"realI":3252781,"realM":-442823},"cats":[{"cod":"11","nom":"MATERIAS PRIMAS","ptoG":4326659,"realG":2148714,"ptoI":0,"realI":0},{"cod":"11","nom":"CORRECTORES","ptoG":327314,"realG":189496,"ptoI":0,"realI":0},{"cod":"12101","nom":"SANI PLUS CITRIC","ptoG":12170,"realG":6393,"ptoI":0,"realI":0},{"cod":"12102","nom":"INGASO DEFITER","ptoG":41616,"realG":0,"ptoI":0,"realI":0},{"cod":"12103","nom":"INGASO IP15- PLUS","ptoG":60603,"realG":51680,"ptoI":0,"realI":0},{"cod":"12104","nom":"INGASO DETOXIN","ptoG":14410,"realG":0,"ptoI":0,"realI":0},{"cod":"12107","nom":"INGASO SANO","ptoG":10783,"realG":0,"ptoI":0,"realI":0},{"cod":"12109","nom":"CORRECTOR REPRODUCTORAS","ptoG":0,"realG":28240,"ptoI":0,"realI":0},{"cod":"12111","nom":"BLUE","ptoG":0,"realG":2173,"ptoI":0,"realI":0},{"cod":"12112","nom":"CORRECTOR DE CEBO Y CRECIMIENTO IBERICO","ptoG":18942,"realG":12870,"ptoI":0,"realI":0},{"cod":"12116","nom":"LISINA HCL FG 99% 25KG","ptoG":57854,"realG":13678,"ptoI":0,"realI":0},{"cod":"12117","nom":"MIA-BOND 20 KG","ptoG":11055,"realG":5319,"ptoI":0,"realI":0},{"cod":"12123","nom":"SOLPREME","ptoG":0,"realG":3952,"ptoI":0,"realI":0},{"cod":"12127","nom":"CORRECTOR DE TRANSICION","ptoG":0,"realG":21775,"ptoI":0,"realI":0},{"cod":"12129","nom":"HTM 96","ptoG":1840,"realG":0,"ptoI":0,"realI":0},{"cod":"12130","nom":"INGASO PROCEL","ptoG":12208,"realG":0,"ptoI":0,"realI":0},{"cod":"12132","nom":"TREONINA","ptoG":5764,"realG":1370,"ptoI":0,"realI":0},{"cod":"12133","nom":"METEONINA","ptoG":4994,"realG":0,"ptoI":0,"realI":0},{"cod":"12134","nom":"FLUIDICIN","ptoG":8808,"realG":0,"ptoI":0,"realI":0},{"cod":"122","nom":"CORRECTOR BOVINO","ptoG":66266,"realG":42046,"ptoI":0,"realI":0},{"cod":"13","nom":"MANTENIMIENTO Y REPARACIONES","ptoG":65400,"realG":31517,"ptoI":0,"realI":0},{"cod":"14","nom":"GASOLEO MOLINO","ptoG":0,"realG":15435,"ptoI":0,"realI":0},{"cod":"19","nom":"VENTA CEREALES","ptoG":0,"realG":0,"ptoI":4841476,"realI":2441047},{"cod":"21","nom":"ALQUILERES","ptoG":34059,"realG":16723,"ptoI":0,"realI":0},{"cod":"22","nom":"GESTORIAS Y ASESORIAS","ptoG":40109,"realG":19554,"ptoI":0,"realI":0},{"cod":"23","nom":"SUMINISTROS","ptoG":16745,"realG":10355,"ptoI":0,"realI":0},{"cod":"24","nom":"IMPUESTOS Y TASAS","ptoG":4407,"realG":11276,"ptoI":0,"realI":0},{"cod":"25","nom":"PERSONAL","ptoG":309337,"realG":159445,"ptoI":407673,"realI":150917},{"cod":"126","nom":"INTERESES FINANCIEROS REFACTURADOS","ptoG":0,"realG":0,"ptoI":1115896,"realI":0},{"cod":"26","nom":"INTERESES Y GASTOS BANCARIOS","ptoG":1826550,"realG":1004975,"ptoI":0,"realI":583964},{"cod":"27","nom":"SERVICIOS PRESTADOS A OTRAS EMPRESAS","ptoG":0,"realG":8305,"ptoI":191156,"realI":55781},{"cod":"28","nom":"GASTOS VARIOS","ptoG":60658,"realG":43940,"ptoI":0,"realI":0},{"cod":"29","nom":"SEGUROS","ptoG":593,"realG":15984,"ptoI":0,"realI":0},{"cod":"31","nom":"ALQUILERES","ptoG":0,"realG":0,"ptoI":30310,"realI":21071}],"meses":[{"mes":"ENE","ptoG":556174,"ptoI":521148,"realG":597530,"realI":506312},{"mes":"FEB","ptoG":579866,"ptoI":548305,"realG":532445,"realI":477487},{"mes":"MAR","ptoG":579866,"ptoI":548530,"realG":787637,"realI":658392},{"mes":"ABR","ptoG":579866,"ptoI":548305,"realG":612819,"realI":561038},{"mes":"MAY","ptoG":586377,"ptoI":555062,"realG":608846,"realI":489967},{"mes":"JUN","ptoG":588313,"ptoI":554837,"realG":565761,"realI":559585}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":2653662},{"label":"4. Aprovisionamientos","val":-2361456},{"label":"5. Otros ingresos de explotación","val":15155},{"label":"6. Gastos de personal","val":-159445},{"label":"7. Otros gastos de explotación","val":-206471},{"label":"8. Amortización del inmovilizado","val":-29321},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":0},{"label":"A) Resultado explotación (del 1 al 13)","val":-72485},{"label":"14. Ingresos financieros","val":583964},{"label":"15. Gastos financieros","val":-971033},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-387069},{"label":"C) Resultado antes de impuestos (A+B)","val":-459554},{"label":"E) Resultado del ejercicio (C+20)","val":-459554}],"pygResultado":-459554,"pygVarExist":-7295},{"nombre":"Solalba","total":{"ptoG":1528140,"ptoI":3472560,"realG":781825,"realI":921035,"realM":139210},"cats":[{"cod":"131","nom":"PORCINO","ptoG":1089530,"realG":428069,"ptoI":3472560,"realI":921030},{"cod":"1321","nom":"VETERINARIO PORCINO","ptoG":97878,"realG":37599,"ptoI":0,"realI":0},{"cod":"13222","nom":"MEDICAMENTOS PORCINO","ptoG":89889,"realG":33054,"ptoI":0,"realI":0},{"cod":"13223","nom":"MEDICINAS REPRODUCTORA","ptoG":11151,"realG":9665,"ptoI":0,"realI":0},{"cod":"13224","nom":"MEDICINAS LECHONES","ptoG":78738,"realG":23390,"ptoI":0,"realI":0},{"cod":"1324","nom":"MATERIAL VETERINARIO POR","ptoG":4898,"realG":2485,"ptoI":0,"realI":0},{"cod":"133","nom":"DESRATIZACION","ptoG":3090,"realG":2060,"ptoI":0,"realI":0},{"cod":"134","nom":"REPRODUCTORAS","ptoG":180000,"realG":0,"ptoI":0,"realI":0},{"cod":"13702","nom":"OTROS GASTOS PORCINO","ptoG":60576,"realG":30145,"ptoI":0,"realI":0},{"cod":"13703","nom":"CROTALES","ptoG":2446,"realG":994,"ptoI":0,"realI":0},{"cod":"13705","nom":"MATERIAL GANADERO PORCI","ptoG":10095,"realG":3654,"ptoI":0,"realI":0},{"cod":"13706","nom":"LIMPIEZA PORCINO","ptoG":0,"realG":1198,"ptoI":0,"realI":0},{"cod":"13707","nom":"RETIRADA  ANIMALES PORCIN","ptoG":0,"realG":259,"ptoI":0,"realI":0},{"cod":"13708","nom":"MATERIAL BANCO SEMEN","ptoG":10979,"realG":0,"ptoI":0,"realI":0},{"cod":"138","nom":"SEMEN PORCINO","ptoG":37055,"realG":24041,"ptoI":0,"realI":0},{"cod":"1392","nom":"VENTA PORCINO","ptoG":3294,"realG":0,"ptoI":3472560,"realI":921030},{"cod":"1395","nom":"CERDAS DESVIEJE - VERRAC","ptoG":0,"realG":0,"ptoI":64800,"realI":700},{"cod":"1396","nom":"MARRANOS IB. CRUZADO PARA CORCHO/CAÑADA","ptoG":0,"realG":0,"ptoI":1909260,"realI":402780},{"cod":"1397","nom":"LECHONES IBERICOS (OTROS)","ptoG":3294,"realG":0,"ptoI":1498500,"realI":517550},{"cod":"161","nom":"REPARACIONES Y MANTENIMIENTO","ptoG":10332,"realG":24448,"ptoI":0,"realI":0},{"cod":"162","nom":"REPARACION SILOTRONIC","ptoG":0,"realG":299,"ptoI":0,"realI":0},{"cod":"17","nom":"RESIDUOS","ptoG":0,"realG":3282,"ptoI":0,"realI":0},{"cod":"18","nom":"OTROS","ptoG":135,"realG":0,"ptoI":0,"realI":0},{"cod":"19","nom":"LOCALIZADORES MOVILES","ptoG":0,"realG":43,"ptoI":0,"realI":0}],"meses":[{"mes":"ENE","ptoG":114614,"ptoI":200700,"realG":137506,"realI":106802},{"mes":"FEB","ptoG":111989,"ptoI":397260,"realG":114259,"realI":208528},{"mes":"MAR","ptoG":110182,"ptoI":113400,"realG":162029,"realI":160000},{"mes":"ABR","ptoG":0,"ptoI":0,"realG":127096,"realI":220900},{"mes":"MAY","ptoG":110759,"ptoI":320400,"realG":112316,"realI":40001},{"mes":"JUN","ptoG":112798,"ptoI":347400,"realG":128619,"realI":184805}],"pnl":[{"label":"1. Importe neto cifra de negocios","val":921030},{"label":"4. Aprovisionamientos","val":-471385},{"label":"5. Otros ingresos de explotación","val":0},{"label":"6. Gastos de personal","val":-96899},{"label":"7. Otros gastos de explotación","val":-119157},{"label":"8. Amortización del inmovilizado","val":-111866},{"label":"11. Deterioro y Rtdo. enajenaciones inmovil.","val":-12501},{"label":"A) Resultado explotación (del 1 al 13)","val":109279},{"label":"14. Ingresos financieros","val":5},{"label":"15. Gastos financieros","val":-13295},{"label":"B) Resultado financiero (14+15+16+17+18+19)","val":-13290},{"label":"C) Resultado antes de impuestos (A+B)","val":95990},{"label":"E) Resultado del ejercicio (C+20)","val":95990}],"pygResultado":95990,"pygVarExist":-43221}]};
+const F = DATA.fincas;
+const eur = n => new Intl.NumberFormat('es-ES',{maximumFractionDigits:0}).format(Math.round(n))+' €';
+const signed = n => (n>=0?'+':'−')+eur(Math.abs(n));
+const pct = (r,p)=> p>0 ? Math.round(r/p*100) : null;
+const w = v => Math.max(0,Math.min(100,v||0));
+const res = f => f.total.realI - f.total.realG;
+document.getElementById('gen').textContent = 'Datos a '+DATA.generado;
+
+/* ---------- RESUMEN ---------- */
+const T = F.reduce((a,f)=>{a.ptoI+=f.total.ptoI;a.realI+=f.total.realI;a.ptoG+=f.total.ptoG;a.realG+=f.total.realG;return a;},{ptoI:0,realI:0,ptoG:0,realG:0});
+const Tres=T.realI-T.realG, nPos=F.filter(f=>res(f)>=0).length;
+document.getElementById('tiles').innerHTML=[
+ ['Ingresos Ene–Jun',eur(T.realI),pct(T.realI,T.ptoI)+'% del ppto anual'],
+ ['Gastos Ene–Jun',eur(T.realG),pct(T.realG,T.ptoG)+'% del ppto anual'],
+ ['Resultado Ene–Jun',signed(Tres),Tres>=0?'en positivo':'en negativo'],
+ ['Fincas en positivo',nPos+' de 6',(6-nPos)+' en negativo']
+].map(t=>`<div class="tile"><div class="k">${t[0]}</div><div class="v num">${t[1]}</div><div class="s">${t[2]}</div></div>`).join('');
+document.getElementById('cards').innerHTML=F.map(f=>{
+ const t=f.total,r=res(f),ok=r>=0,ei=pct(t.realI,t.ptoI),eg=pct(t.realG,t.ptoG);
+ return `<div class="card"><h3>${f.nombre}<span class="pill ${ok?'good':'bad'}">${ok?'En positivo':'En negativo'}</span></h3>
+  <div class="metric"><div class="ml"><span>Ingresos</span><span class="ej">${ei}% del ppto</span></div>
+   <div class="mv num">${eur(t.realI)} <span class="pto">/ ${eur(t.ptoI)}</span></div><div class="bar"><i style="width:${w(ei)}%"></i></div></div>
+  <div class="metric"><div class="ml"><span>Gastos</span><span class="ej">${eg}% del ppto</span></div>
+   <div class="mv num">${eur(t.realG)} <span class="pto">/ ${eur(t.ptoG)}</span></div><div class="bar g"><i style="width:${w(eg)}%"></i></div></div>
+  <div class="res"><span class="rl">Resultado Ene–Jun</span><span class="rv num ${ok?'good':'bad'}">${signed(r)}</span></div></div>`;
+}).join('');
+
+/* ---------- COMPARATIVA ---------- */
+const maxAbs=Math.max(...F.map(f=>Math.abs(f.pygResultado||0)));
+document.getElementById('cmpRes').innerHTML=[...F].sort((a,b)=>(b.pygResultado||0)-(a.pygResultado||0)).map(f=>{
+ const v=f.pygResultado||0,neg=v<0,ww=maxAbs?Math.abs(v)/maxAbs*50:0;
+ const bar=neg?`left:${50-ww}%;width:${ww}%;background:var(--bad)`:`left:50%;width:${ww}%;background:var(--accent)`;
+ return `<div class="cmprow"><span class="cn">${f.nombre}</span><span class="cmpbar"><span class="z"></span><i style="${bar}"></i></span><span class="cmpval ${neg?'neg':'pos'}">${signed(v)}</span></div>`;
+}).join('');
+document.getElementById('cmpTab').innerHTML=`<thead><tr><th class="lbl">Finca</th><th>Ingresos</th><th>Gastos</th><th>Resultado libro</th><th>Resultado PYG</th></tr></thead><tbody>`+
+ F.map(f=>`<tr><td class="lbl">${f.nombre}</td><td class="num">${eur(f.total.realI)}</td><td class="num">${eur(f.total.realG)}</td>
+  <td class="num ${res(f)>=0?'pos':'neg'}">${signed(res(f))}</td><td class="num ${(f.pygResultado||0)>=0?'pos':'neg'}">${signed(f.pygResultado||0)}</td></tr>`).join('')+
+ `<tr class="tot"><td class="lbl">GRUPO</td><td class="num">${eur(T.realI)}</td><td class="num">${eur(T.realG)}</td><td class="num ${Tres>=0?'pos':'neg'}">${signed(Tres)}</td><td class="num">${signed(F.reduce((s,f)=>s+(f.pygResultado||0),0))}</td></tr></tbody>`;
+
+/* ---------- selector de finca compartido ---------- */
+let cur=0;
+function renderSelectors(){document.querySelectorAll('.finca-sel').forEach(s=>{s.innerHTML=F.map((f,i)=>`<button aria-pressed="${i===cur}" data-i="${i}">${f.nombre}</button>`).join('');});}
+document.getElementById('tabs').parentElement.addEventListener('click',e=>{const b=e.target.closest('.finca-sel button');if(!b)return;cur=+b.dataset.i;renderSelectors();renderPL();renderEv();renderAct();});
+renderSelectors();
+
+/* ---------- P&L ---------- */
+function renderPL(){const f=F[cur];
+ const rows=f.pnl.map(l=>{const sub=/^[ACE]\)/.test(l.label);const cls=sub?'sub':'';const neg=l.val<0;
+  return `<tr class="${cls}"><td class="lbl">${l.label}</td><td class="num ${neg?'neg':(l.val>0?'pos':'')}">${eur(l.val)}</td></tr>`;}).join('');
+ document.getElementById('plTab').innerHTML=`<thead><tr><th class="lbl">Cuenta de explotación · ${f.nombre}</th><th>Ene–Jun</th></tr></thead><tbody>${rows}</tbody>`;}
+
+/* ---------- EVOLUCIÓN ---------- */
+function renderEv(){const f=F[cur];const ms=f.meses;const mx=Math.max(...ms.map(m=>Math.max(m.realI,m.realG)),1);
+ document.getElementById('evChart').innerHTML=ms.map(m=>`<div class="mcol"><div class="mbars">
+   <span class="bi" style="height:${m.realI/mx*100}%" title="Ingresos ${eur(m.realI)}"></span>
+   <span class="bg" style="height:${m.realG/mx*100}%" title="Gastos ${eur(m.realG)}"></span></div><div class="mlab">${m.mes}</div></div>`).join('');
+ const rows=ms.map(m=>{const r=m.realI-m.realG,rp=m.ptoI-m.ptoG;return `<tr><td class="lbl">${m.mes}</td>
+   <td class="num">${eur(m.realI)}</td><td class="num">${eur(m.realG)}</td><td class="num ${r>=0?'pos':'neg'}">${signed(r)}</td><td class="num" style="color:var(--faint)">${signed(rp)}</td></tr>`;}).join('');
+ const tot=ms.reduce((a,m)=>{a.i+=m.realI;a.g+=m.realG;return a;},{i:0,g:0});
+ document.getElementById('evTab').innerHTML=`<thead><tr><th class="lbl">Mes</th><th>Ingresos real</th><th>Gastos real</th><th>Resultado real</th><th>Rdo. ppto</th></tr></thead><tbody>${rows}
+  <tr class="tot"><td class="lbl">Ene–Jun</td><td class="num">${eur(tot.i)}</td><td class="num">${eur(tot.g)}</td><td class="num ${tot.i-tot.g>=0?'pos':'neg'}">${signed(tot.i-tot.g)}</td><td class="num"></td></tr></tbody>`;}
+
+/* ---------- CUADRES ---------- */
+document.getElementById('cuTab').innerHTML=`<thead><tr><th class="lbl">Finca</th><th>Rdo. libro</th><th>Var. exist. PYG</th><th>Rdo. PYG ajustado</th><th>Diferencia</th><th class="lbl">Estado</th></tr></thead><tbody>`+
+ F.map(f=>{const rl=f.total.realM,ve=f.pygVarExist||0,rp=(f.pygResultado||0)-ve,d=rl-rp,a=Math.abs(d);
+  const est=a<1500?['good','Cuadra']:a<25000?['warn2','Dif. reparto']:['bad','Revisar'];
+  return `<tr><td class="lbl">${f.nombre}</td><td class="num ${rl>=0?'pos':'neg'}">${signed(rl)}</td><td class="num" style="color:var(--faint)">${signed(ve)}</td><td class="num ${rp>=0?'pos':'neg'}">${signed(rp)}</td>
+   <td class="num" style="color:var(--faint)">${signed(d)}</td><td class="lbl"><span class="pill ${est[0]}">${est[1]}</span></td></tr>`;}).join('')+`</tbody>`;
+
+/* ---------- POR ACTIVIDAD ---------- */
+function renderAct(){const f=F[cur];
+ const cats=f.cats.filter(c=>c.ptoG||c.realG||c.ptoI||c.realI).sort((a,b)=>(b.ptoG+b.ptoI+b.realG+b.realI)-(a.ptoG+a.ptoI+a.realG+a.realI));
+ const s=cats.reduce((a,c)=>{a.ptoG+=c.ptoG;a.realG+=c.realG;a.ptoI+=c.ptoI;a.realI+=c.realI;return a;},{ptoG:0,realG:0,ptoI:0,realI:0});
+ const cell=(r,p)=>{const e=pct(r,p);const bar=e===null?'':`<span class="minibar"><i style="width:${w(e)}%"></i></span>`;return `<td class="num">${eur(r)}</td><td class="num" style="color:var(--muted)">${e===null?'—':e+'%'}${bar}</td>`;};
+ const rows=cats.map(c=>`<tr><td class="lbl">${c.nom||('Cód. '+c.cod)}</td><td class="num">${eur(c.ptoG)}</td>${cell(c.realG,c.ptoG)}<td class="num">${eur(c.ptoI)}</td>${cell(c.realI,c.ptoI)}</tr>`).join('');
+ document.getElementById('actTab').innerHTML=`<thead><tr><th class="lbl">Actividad · ${f.nombre}</th><th>Gasto ppto</th><th>Gasto real</th><th>%ej</th><th>Ingreso ppto</th><th>Ingreso real</th><th>%ej</th></tr></thead><tbody>${rows}
+  <tr class="tot"><td class="lbl">TOTAL</td><td class="num">${eur(s.ptoG)}</td><td class="num">${eur(s.realG)}</td><td class="num" style="color:var(--muted)">${pct(s.realG,s.ptoG)??'—'}%</td><td class="num">${eur(s.ptoI)}</td><td class="num">${eur(s.realI)}</td><td class="num" style="color:var(--muted)">${pct(s.realI,s.ptoI)??'—'}%</td></tr></tbody>`;}
+
+renderPL();renderEv();renderAct();
+
+/* ---------- TABS ---------- */
+const tabs=[...document.querySelectorAll('.tab')],secs=['resumen','comparativa','pyl','evolucion','cuadres','actividad'];
+tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.setAttribute('aria-selected',x===t));
+ secs.forEach(s=>document.getElementById(s).hidden=s!==t.dataset.tab);}));
+
+document.getElementById('foot').innerHTML='Prototipo · datos extraídos de los libros anuales (hoja PRESUPUESTO y hojas mensuales) y de los PYG de cada finca. Copia estática — se actualiza al regenerar. En Solalba el desglose por actividad usa otra numeración y aparece incompleto.';
+</script>
