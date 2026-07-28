@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Panel de control · Fincas 2026</title>
 <style>
   :root{
@@ -57,7 +63,7 @@
   table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
   th,td{padding:9px 12px;text-align:right;white-space:nowrap}
   th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:600;border-bottom:1.5px solid var(--line);background:var(--accent-soft)}
-  td{border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+  td{border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;color:var(--ink)}
   td.lbl,th.lbl{text-align:left;font-variant-numeric:normal}
   td.lbl{font-weight:500}
   tr:last-child td{border-bottom:0}
@@ -87,6 +93,10 @@
   footer{max-width:1080px;margin:0 auto;padding:0 22px 30px;font-size:11.5px;color:var(--faint)}
   @media (max-width:520px){header.top .gen{display:none}main{padding:16px}.cmprow{grid-template-columns:80px 1fr 96px}}
 </style>
+<style>html,body{margin:0;padding:0;min-height:100%;background:var(--paper);color:var(--ink)}</style>
+</head>
+<body>
+
 
 <div class="wrap">
   <header class="top">
@@ -236,3 +246,6 @@ tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.setAttribute('
 
 document.getElementById('foot').innerHTML='Prototipo · datos extraídos de los libros anuales (hoja PRESUPUESTO y hojas mensuales) y de los PYG de cada finca. Copia estática — se actualiza al regenerar. En Solalba el desglose por actividad usa otra numeración y aparece incompleto.';
 </script>
+
+</body>
+</html>
